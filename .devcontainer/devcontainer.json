@@ -35,7 +35,6 @@
                 "ms-python.black-formatter",
                 "ms-toolsai.python-ds-extension-pack",
                 "ms-python.pylint",
-                "ms-toolsai.jupyter",
                 "ms-python.vscode-pylance",
                 "github.copilot",
                 "github.copilot-chat",
