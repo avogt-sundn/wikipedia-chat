@@ -9,11 +9,12 @@ import time
 from uuid import uuid4
 
 import pandas as pd
-from discover_ollama import discover_ollama
 from dotenv import load_dotenv
 from langchain_chroma import Chroma
 from langchain_ollama import OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+from discover_ollama import discover_ollama
 
 load_dotenv()
 
@@ -77,11 +78,20 @@ for line in file_content:
 
     print(line['url'])
 
-    texts = []
-    texts = text_splitter.create_documents([line['raw_text']],metadatas=[{"source":line['url'], "title":line['title']}])
+    print(f"\n[Embedding Source] {line['url']}")
+    print(
+        f"Original text (truncated): {line['raw_text'][:200]}{'...' if len(line['raw_text']) > 200 else ''}")
+
+    texts = text_splitter.create_documents([line['raw_text']], metadatas=[
+                                           {"source": line['url'], "title": line['title']}])
+
+    print(f"Created {len(texts)} text chunks:")
+    for idx, doc in enumerate(texts):
+        preview = doc.page_content[:120].replace('\n', ' ')
+        print(
+            f"  Chunk {idx+1}: {preview}{'...' if len(doc.page_content) > 120 else ''}")
 
     uuids = [str(uuid4()) for _ in range(len(texts))]
-
     vector_store.add_documents(documents=texts, ids=uuids)
 
 
